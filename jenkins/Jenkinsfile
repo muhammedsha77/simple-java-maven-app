@@ -1,33 +1,26 @@
-pipeline
-{
-
-agent {
-  label 'server1'
-}
-
-tools {
-  maven 'mymaven'
-}
-
-stages{
-
-    stage('build')
-    {
-        steps {
-            sh 'mvn clean package -Dmaven.compiler.source=17 -Dmaven.compiler.target=17'
-        }
-
-        post {
-        success {
-            archiveArtifacts artifacts: '**/target/*.war'
-                 }
-            }
-
+pipeline {
+    agent {
+        label 'server1'     // Runs the pipeline on agent with label 'server1'
     }
 
-   
+    tools {
+        maven 'mymaven'    // Uses Maven tool configured in Jenkins (should be configured under Global Tool Configuration)
+    }
 
-    
+    stages {
+        stage('build') {
+            steps {
+                sh 'mvn clean package -Dmaven.compiler.source=17 -Dmaven.compiler.target=17'  
+                // Runs Maven build with Java 17 source and target compatibility
+            }
+            post {
+                success {
+                    archiveArtifacts artifacts: '**/target/*.jar'  
+                    // Archives the built JAR artifact on success
+                }
+            }
+        }
+    }
 }
 
-}
+
