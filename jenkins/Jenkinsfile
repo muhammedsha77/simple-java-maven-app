@@ -2,7 +2,13 @@ pipeline {
     agent {
         label 'server1'     // Runs the pipeline on agent with label 'server1'
     }
+    
+    parameters {  string defaultValue: 'shan', name: 'lastname'}
 
+    environment {
+        // Define environment variables here if needed
+        NAME = 'muhammed'   // Example: MY_ENV_VAR = 'some_value'
+    }
     tools {
         maven 'mymaven'    // Uses Maven tool configured in Jenkins (should be configured under Global Tool Configuration)
     }
@@ -11,7 +17,9 @@ pipeline {
         stage('build') {
             steps {
                 sh 'mvn clean package -Dmaven.compiler.source=17 -Dmaven.compiler.target=17'  
-                // Runs Maven build with Java 17 source and target compatibility
+                echo "Building with Java 17"
+                echo "hello $NAME  ${params.lastname}"  // Accessing the parameter value
+                // Runs Maven build with a 17 source and target compatibility
             }
             post {
                 success {
